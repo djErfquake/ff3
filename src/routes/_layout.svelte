@@ -15,8 +15,7 @@
 	} */
 
 	main {
-		max-width: 80vw;
-		background-color: white;
+		max-width: 85vw;
 		padding: 2em;
 		margin: 0 auto;
 	}
