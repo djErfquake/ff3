@@ -93,4 +93,15 @@
 
         background-color: #341f97;
     }
+
+    @media only screen and (max-width: 768px) {
+        .team-picture {
+            width: 150px;
+            height: 150px;
+        }
+
+        .behind-logo {
+            width: 115px;
+        }
+    }
 </style>
