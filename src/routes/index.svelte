@@ -44,7 +44,7 @@
 	<progress class="progress is-large is-link" max="100">60%</progress>
 	{:then league}
 		{@debug league}
-		<PowerRankings teams={league.teams}></PowerRankings>
+		<PowerRankings teams={league}></PowerRankings>
 	{:catch error}
 		{@debug error}
 		<p>...error</p>
