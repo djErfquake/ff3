@@ -5,30 +5,12 @@
 
 
 <script context="module">
-	import PowerRankings from '../components/PowerRankings.svelte';
+	import PowerRankings from '../components/PowerRankings/PowerRankings.svelte';
 
 	const fetchLeagueData = (async () => {
 		const response = await fetch('league');
 		let league = await response.json();
 		return league;
-		// return {
-		// 	teams: [
-		// 		{name: "Calvin"},
-		// 		{name: "Carolyn"},
-		// 		{name: "Anthony"},
-		// 		{name: "Calvin"},
-		// 		{name: "Calvin"},
-		// 		{name: "Calvin"},
-		// 		{name: "Calvin"},
-		// 		{name: "Calvin"},
-		// 		{name: "Calvin"},
-		// 		{name: "Calvin"},
-		// 		{name: "Calvin"},
-		// 		{name: "Calvin"},
-		// 		{name: "Calvin"},
-		// 		{name: "Calvin"}
-		// 	]
-		// }
 	})();
 </script>
 

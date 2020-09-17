@@ -1,4 +1,6 @@
 <script>
+    import PowerRankingStats from './PowerRankingStats.svelte';
+
     export let team;
     export let rank;
 
@@ -9,7 +11,7 @@
 
 
 <main class="card">
-    <div class="team-picture"></div>
+    <div class="team-picture" style="background-image: url({team.logo});"></div>
     <div class="rank">
         <div class="rank-number is-size-2 has-text-weight-semibold is-family-sans-serif">{rank + 1}</div>
     </div>
@@ -17,8 +19,8 @@
     <div class="card-content">
         <div class="behind-logo"></div>
         <div class="team-name-and-stats">
-            <div class="team-name is-size-3">{team.name}</div>
-            <div class="team-stats"></div>
+            <div class="team-name is-size-3">{team.owner}</div>
+            <PowerRankingStats team={team}/>
         </div>
     </div>
 
@@ -42,10 +44,14 @@
         width: 200px;
         height: 200px;
         position: absolute;
-        left: -5%;
-        top: -15%;
+        left: -10%;
+        top: -20%;
 
-        background-color: #c8d6e5;
+        /* box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02); */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        border-radius: 50%;
     }
 
     .rank {
@@ -54,6 +60,8 @@
         position: absolute;
         left: 85%;
         top: -10%;
+        border-radius: 50%;
+        box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
         
         display:flex;
         justify-content: center;
@@ -71,20 +79,16 @@
         width: 100%;
         display: flex;
         flex-flow: wrap;
+        flex-direction: row-reverse;
     }
 
     .behind-logo {
-        width: 180px;
         height: 100%;
     }
 
-    .team-name {
-        width: 100%;
-    }
-
-    .team-stats {
-        height: 130px;
-        width: 100%;
+    .team-name-and-stats {
+        width: 480px;
+        height: 100%;
     }
 
     .position-distribution {
@@ -95,13 +99,26 @@
     }
 
     @media only screen and (max-width: 768px) {
-        .team-picture {
+        /* .team-picture {
             width: 150px;
             height: 150px;
         }
 
         .behind-logo {
             width: 115px;
+        } */
+
+        .team-picture {
+            width: 150px;
+            height: 150px;
+        }
+
+        .team-name-and-stats {
+            width: 285px;
+        }
+
+        .team-name {
+            padding-left: 100px;
         }
     }
 </style>

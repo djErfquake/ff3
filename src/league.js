@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 // get league data from espn
 const LEAGUE_ID = '1081893';
-const YEAR = '2019';
+const YEAR = '2020';
 let league = null;
 const url = `https://fantasy.espn.com/apis/v3/games/ffl/seasons/${YEAR}/segments/0/leagues/${LEAGUE_ID}?view=mMatchup&view=mMatchupScore&view=mTeam&view=mRoster&view=mBoxscore`;
 const opts = {
@@ -17,21 +17,20 @@ fetch(url, opts)
     const NUM_OF_OTHER_TEAMS = league.teams.length - 1;
     const HALF_TEAMS = Math.floor(NUM_OF_OTHER_TEAMS / 2);
     
+    let leagueSchedule = league.schedule.filter(s => s.winner != "UNDECIDED");
     league.teams.forEach(t => {
         // initialize names
         t.name = `${t.location} ${t.nickname}`;
-        t.owner = league.members.filter(m => m.id == t.owners[0])[0].firstName;
-        if (t.owner === "M") { t.owner = "Mandy"; }
-        else if (t.owner == "Michael") { t.owner = "MIKE"; }
+        t.owner = nameToNickname(league.members.filter(m => m.id == t.owners[0])[0].firstName);
         
         // schedule
-        let schedule = league.schedule.filter(s => s.away.teamId == t.id || s.home.teamId == t.id);
+        let schedule = leagueSchedule.filter(s => s.away.teamId == t.id || s.home.teamId == t.id);
         t.record.games = schedule.map(function(g) {
             const isHome = g.home.teamId == t.id;
             const points = isHome ? g.home.totalPoints : g.away.totalPoints;
             const opponentPoints = isHome ? g.away.totalPoints : g.home.totalPoints;
             const won = points > opponentPoints;
-            const gamesInMatchupPeriod = league.schedule.filter(s => s.matchupPeriodId == g.matchupPeriodId);
+            const gamesInMatchupPeriod = leagueSchedule.filter(s => s.matchupPeriodId == g.matchupPeriodId);
             const couldHaveBeat = gamesInMatchupPeriod.filter(s => s.away.teamId != t.id && s.away.totalPoints < points).length + 
                                   gamesInMatchupPeriod.filter(s => s.home.teamId != t.id && s.home.totalPoints < points).length;
             let pointsLuckyStatus = LuckyStatus.NONE;
@@ -48,6 +47,16 @@ fetch(url, opts)
                 pointsLuckyStatus: pointsLuckyStatus
             };
         });
+
+        // player stats
+        const activePlayers = t.roster.entries.filter(p => p.lineupSlotId < 20);
+        const bestPlayer = [...activePlayers].sort((a, b) => b.playerPoolEntry.appliedStatTotal - a.playerPoolEntry.appliedStatTotal)[0];
+        t.bestPlayer = {
+            name: bestPlayer.playerPoolEntry.player.fullName,
+            points: bestPlayer.playerPoolEntry.appliedStatTotal,
+            pointsAverage: bestPlayer.playerPoolEntry.appliedStatTotal / t.record.games.length,
+            position: PositionMap[bestPlayer.lineupSlotId]
+        }
         
         // create record stats
         t.pointsAverage = t.points / t.record.games.length;
@@ -73,6 +82,46 @@ const LuckyStatus = {
     BETTER_THAN_ESPN_PROJECTED: 3,
     WORSE_THAN_ESPN_PROJECTED: 4
 }
+
+const NickNames = {
+    "Stephanie": "Steph",
+    "Jordan": "Jobin",
+    "Michael": "MIKE",
+    "M": "Mandy"
+}
+const nameToNickname = function(name) {
+    // no null coalecing!!! :(
+    let nickname = NickNames[name];
+    return nickname ? nickname : name;
+}
+
+const PositionMap = {
+    0: 'QB',
+    1: 'TQB',
+    2: 'RB',
+    3: 'RB/WR',
+    4: 'WR',
+    5: 'WR/TE',
+    6: 'TE',
+    7: 'OP',
+    8: 'DT',
+    9: 'DE',
+    10: 'LB',
+    11: 'DL',
+    12: 'CB',
+    13: 'S',
+    14: 'DB',
+    15: 'DP',
+    16: 'D/ST',
+    17: 'K',
+    18: 'P',
+    19: 'HC',
+    20: 'Bench',
+    21: 'IR',
+    22: 'Unknown?', // TODO: Figure out what this is
+    23: 'RB/WR/TE',
+    24: 'Unknown?' // TODO: Figure out what this is
+  };
 
 
 module.exports = {

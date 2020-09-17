@@ -1,5 +1,5 @@
 <script>
-    import TeamCard from '../components/PowerRankingCard.svelte';
+    import TeamCard from './PowerRankingCard.svelte';
 
     export let teams;
 </script>
