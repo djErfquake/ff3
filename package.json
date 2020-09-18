@@ -1,7 +1,10 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "Fantasy Football Stats",
+  "description": "Shows stats for a fantasy football league",
   "version": "0.0.1",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "dev": "sapper dev",
     "build": "sapper build --legacy",
