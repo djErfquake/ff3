@@ -9,8 +9,9 @@
 
 	const fetchLeagueData = (async () => {
 		// const API_URI = ''; // dev
-		const API_URI = 'https://abff.herokuapp.com/'; // prod
-		const response = await fetch(API_URI + 'league');
+		// // const API_URI = 'https://abff.herokuapp.com/'; // prod
+		// const response = await fetch(API_URI + 'league');
+		const response = await fetch('league');
 		let league = await response.json();
 		return league;
 	})();
