@@ -8,12 +8,6 @@ const dev = NODE_ENV === 'development';
 
 console.log("dev", dev);
 
-// get api uri
-let API_URI = '';
-if (!dev) {
-	API_URI = 'https://abff.herokuapp.com/';
-}
-
 // load league info
 import league from './league.js';
 

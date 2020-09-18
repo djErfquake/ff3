@@ -8,7 +8,9 @@
 	import PowerRankings from '../components/PowerRankings/PowerRankings.svelte';
 
 	const fetchLeagueData = (async () => {
-		const response = await fetch('league');
+		// const API_URI = ''; // dev
+		const API_URI = 'https://abff.herokuapp.com/'; // prod
+		const response = await fetch(API_URI + 'league');
 		let league = await response.json();
 		return league;
 	})();
