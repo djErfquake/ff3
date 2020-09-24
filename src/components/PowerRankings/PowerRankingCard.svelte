@@ -99,14 +99,6 @@
     }
 
     @media only screen and (max-width: 768px) {
-        /* .team-picture {
-            width: 150px;
-            height: 150px;
-        }
-
-        .behind-logo {
-            width: 115px;
-        } */
 
         .team-picture {
             width: 150px;
@@ -119,6 +111,28 @@
 
         .team-name {
             padding-left: 100px;
+        }
+    }
+
+    @media only screen and (max-width: 400px) {
+
+        .team-name-and-stats {
+            width: 230px;
+        }
+
+        .team-name {
+            padding-left: 80px;
+        }
+    }
+
+    @media only screen and (max-width: 400px) {
+
+        .team-name-and-stats {
+            width: 200px;
+        }
+
+        .team-name {
+            padding-left: 90px;
         }
     }
 </style>
