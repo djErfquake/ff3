@@ -11,6 +11,7 @@
         {:else if streakType == "LOSS"}
             <span class="loss">▼{streakLength}</span>
         {/if}
+        <div class="label">STREAK</div>
     </div>
 </main>
 
@@ -31,5 +32,10 @@
 
     .loss {
         color: #ff6b6b;
+    }
+
+    .label {
+        font-weight: 600;
+        line-height: 15px;
     }
 </style>

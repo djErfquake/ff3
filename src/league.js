@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 // get league data from espn
 const LEAGUE_ID = '1081893';
-const YEAR = '2020';
+const YEAR = 2020;
 let league = null;
 const url = `https://fantasy.espn.com/apis/v3/games/ffl/seasons/${YEAR}/segments/0/leagues/${LEAGUE_ID}?view=mMatchup&view=mMatchupScore&view=mTeam&view=mRoster&view=mBoxscore`;
 const opts = {
@@ -22,10 +22,12 @@ fetch(url, opts)
         // initialize names
         t.name = `${t.location} ${t.nickname}`;
         t.owner = nameToNickname(league.members.filter(m => m.id == t.owners[0])[0].firstName);
+        t.plusMinus = 0;
         
         // schedule
         let schedule = leagueSchedule.filter(s => s.away.teamId == t.id || s.home.teamId == t.id);
         t.record.games = schedule.map(function(g) {
+            // game
             const isHome = g.home.teamId == t.id;
             const points = isHome ? g.home.totalPoints : g.away.totalPoints;
             const opponentPoints = isHome ? g.away.totalPoints : g.home.totalPoints;
@@ -36,6 +38,8 @@ fetch(url, opts)
             let pointsLuckyStatus = LuckyStatus.NONE;
             if (!won && couldHaveBeat > HALF_TEAMS) { pointsLuckyStatus = LuckyStatus.LOST_BUT_WOULD_HAVE_BEAT_MOST_TEAMS; }
             else if (won && couldHaveBeat < HALF_TEAMS) { pointsLuckyStatus = LuckyStatus.WON_BUT_WOULD_HAVE_LOST_TO_MOST_TEAMS; }
+            let plusMinus = points - opponentPoints;
+            t.plusMinus += plusMinus;
 
             return {
                 points: points,
@@ -44,23 +48,42 @@ fetch(url, opts)
                 opponentPoints: opponentPoints,
                 won: won,
                 couldHaveBeatCount:  couldHaveBeat,
-                pointsLuckyStatus: pointsLuckyStatus
+                pointsLuckyStatus: pointsLuckyStatus,
+                plusMinus: plusMinus
             };
         });
 
         // player stats
-        const activePlayers = t.roster.entries.filter(p => p.lineupSlotId < 20);
-        const bestPlayer = [...activePlayers].sort((a, b) => b.playerPoolEntry.appliedStatTotal - a.playerPoolEntry.appliedStatTotal)[0];
-        t.bestPlayer = {
-            name: bestPlayer.playerPoolEntry.player.fullName,
-            points: bestPlayer.playerPoolEntry.appliedStatTotal,
-            pointsAverage: bestPlayer.playerPoolEntry.appliedStatTotal / t.record.games.length,
-            position: PositionMap[bestPlayer.lineupSlotId]
-        }
+        t.players = t.roster.entries.map(p => {
+            // let pointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.scoringPeriodId != 0 && s.statSourceId == 0);
+            let pointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.statSourceId == 0);
+            let points = pointStats.map(ps => ps.appliedTotal);
+            // let pointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.scoringPeriodId != 0 && s.statSourceId == 0);
+            let projectedPointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.statSourceId == 1);
+            let projectedPoints = projectedPointStats.map(ps => ps.appliedTotal);
+
+            return {
+                id: p.playerPoolEntry.id,
+                name: p.playerPoolEntry.player.fullName,
+                points: points,
+                projectedPoints: projectedPoints,
+                position: PositionMap[p.lineupSlotId]
+            }
+        });
+        t.players.forEach(p => {
+            if (p.points && p.points.length > 0) {
+                p.pointsTotal = p.points.reduce((a, b) => a + b);
+                p.pointsAverage = p.pointsTotal / p.points.length; 
+            }
+        });
+        t.bestPlayer = [...t.players].sort((a, b) => b.pointsTotal - a.pointsTotal)[0]
+
+        // const activePlayers = t.roster.entries.filter(p => p.lineupSlotId < 20);
         
         // create record stats
         t.pointsAverage = t.points / t.record.games.length;
         t.couldHaveBeatCount = t.record.games.reduce((a, b) => a + (b.couldHaveBeatCount || 0), 0);
+        t.plusMinusAverage = t.plusMinus / t.record.games.length;
     });
 
     // sort teams for power rankings
