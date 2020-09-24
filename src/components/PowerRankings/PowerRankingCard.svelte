@@ -117,22 +117,11 @@
     @media only screen and (max-width: 400px) {
 
         .team-name-and-stats {
-            width: 230px;
+            width: 100%;
         }
 
         .team-name {
-            padding-left: 80px;
-        }
-    }
-
-    @media only screen and (max-width: 400px) {
-
-        .team-name-and-stats {
-            width: 200px;
-        }
-
-        .team-name {
-            padding-left: 90px;
+            padding-left: 100px;
         }
     }
 </style>
