@@ -67,11 +67,14 @@ fetch(url, opts)
 
             let position = PositionMap[p.lineupSlotId];
             let positionType = position.position;
-            if (p.lineupSlotId != 20 && t.pointsByPosition[positionType]) {
-                t.pointsByPosition[positionType].points += pointsTotal;
-            } else {
-                t.pointsByPosition[positionType] = { points: pointsTotal, color: position.color };
-            }
+            if (p.lineupSlotId != 20)
+            {
+                if (t.pointsByPosition[positionType]) {
+                    t.pointsByPosition[positionType].points += pointsTotal;
+                } else {
+                    t.pointsByPosition[positionType] = { points: pointsTotal, color: position.color };
+                }
+            } 
 
             // picture https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/PLAYER_ID.png&w=426&h=310&cb=1
             // Lamar Jackson https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/3916387.png&w=426&h=310&cb=1
