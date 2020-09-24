@@ -1,9 +1,10 @@
 {
-	"background_color": "#ffffff",
-	"theme_color": "#333333",
-	"name": "TODO",
-	"short_name": "TODO",
-	"display": "minimal-ui",
+	"name": "Fantasy Football Stats",
+	"short_name": "FF Stats",
+	"theme_color": "#1dd1a1",
+	"background_color": "#341f97",
+	"display": "fullscreen",
+	"scope": "/",
 	"start_url": "/",
 	"icons": [
 		{
