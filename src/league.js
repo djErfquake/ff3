@@ -23,6 +23,7 @@ fetch(url, opts)
         t.name = `${t.location} ${t.nickname}`;
         t.owner = nameToNickname(league.members.filter(m => m.id == t.owners[0])[0].firstName);
         t.plusMinus = 0;
+        t.pointsByPosition = {};
         
         // schedule
         let schedule = leagueSchedule.filter(s => s.away.teamId == t.id || s.home.teamId == t.id);
@@ -58,27 +59,36 @@ fetch(url, opts)
             // let pointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.scoringPeriodId != 0 && s.statSourceId == 0);
             let pointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.statSourceId == 0);
             let points = pointStats.map(ps => ps.appliedTotal);
+            let pointsTotal = points && points.length > 0 ? points.reduce((a, b) => a + b) : 0;
+            let pointsAverage = points && points.length > 0 ? pointsTotal / points.length : 0;
             // let pointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.scoringPeriodId != 0 && s.statSourceId == 0);
             let projectedPointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.statSourceId == 1);
             let projectedPoints = projectedPointStats.map(ps => ps.appliedTotal);
+
+            let position = PositionMap[p.lineupSlotId];
+            let positionType = position.position;
+            if (p.lineupSlotId != 20 && t.pointsByPosition[positionType]) {
+                t.pointsByPosition[positionType].points += pointsTotal;
+            } else {
+                t.pointsByPosition[positionType] = { points: pointsTotal, color: position.color };
+            }
+
+            // picture https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/PLAYER_ID.png&w=426&h=310&cb=1
+            // Lamar Jackson https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/3916387.png&w=426&h=310&cb=1
 
             return {
                 id: p.playerPoolEntry.id,
                 name: p.playerPoolEntry.player.fullName,
                 points: points,
+                pointsTotal: pointsTotal,
+                pointsAverage: pointsAverage,
                 projectedPoints: projectedPoints,
-                position: PositionMap[p.lineupSlotId]
-            }
-        });
-        t.players.forEach(p => {
-            if (p.points && p.points.length > 0) {
-                p.pointsTotal = p.points.reduce((a, b) => a + b);
-                p.pointsAverage = p.pointsTotal / p.points.length; 
+                position: position
             }
         });
         t.bestPlayer = [...t.players].sort((a, b) => b.pointsTotal - a.pointsTotal)[0]
 
-        // const activePlayers = t.roster.entries.filter(p => p.lineupSlotId < 20);
+        // const activePlayers = t.roster.entries.filter(p => p.lineupSlotId != 20);
         
         // create record stats
         t.pointsAverage = t.points / t.record.games.length;
@@ -119,32 +129,32 @@ const nameToNickname = function(name) {
 }
 
 const PositionMap = {
-    0: 'QB',
-    1: 'TQB',
-    2: 'RB',
-    3: 'RB/WR',
-    4: 'WR',
-    5: 'WR/TE',
-    6: 'TE',
-    7: 'OP',
-    8: 'DT',
-    9: 'DE',
-    10: 'LB',
-    11: 'DL',
-    12: 'CB',
-    13: 'S',
-    14: 'DB',
-    15: 'DP',
-    16: 'D/ST',
-    17: 'K',
-    18: 'P',
-    19: 'HC',
-    20: 'Bench',
-    21: 'IR',
-    22: 'Unknown?', // TODO: Figure out what this is
-    23: 'RB/WR/TE',
-    24: 'Unknown?' // TODO: Figure out what this is
-  };
+    0: { position: 'QB', color: '#54a0ff' },
+    1: { position: 'TQB', color: '#2e86de' },
+    2: { position: 'RB', color: '#ff6b6b' },
+    3: { position: 'RB/WR', color: '#ee5253' },
+    4: { position: 'WR', color: '#5f27cd' },
+    5: { position: 'WR/TE', color: '#341f97' },
+    6: { position: 'TE', color: '#ff9ff3' },
+    7: { position: 'OP', color: '#222f3e' },
+    8: { position: 'DT', color: '#222f3e' },
+    9: { position: 'DE', color: '#222f3e' },
+    10: { position: 'LB', color: '#222f3e' },
+    11: { position: 'DL', color: '#222f3e' },
+    12: { position: 'CB', color: '#222f3e' },
+    13: { position: 'S', color: '#222f3e' },
+    14: { position: 'DB', color: '#222f3e' },
+    15: { position: 'DP', color: '#222f3e' },
+    16: { position: 'D/ST', color: '#222f3e' },
+    17: { position: 'K', color: '#feca57' },
+    18: { position: 'P', color: '#ff9f43' },
+    19: { position: 'HC', color: '#01a3a4' },
+    20: { position: 'Bench', color: '#c8d6e5' },
+    21: { position: 'IR', color: '#c8d6e5' },
+    22: { position: 'Unknown?' }, // TODO: Figure out what this is
+    23: { position: 'FLEX', color: '#10ac84' }, // 'RB/WR/TE'
+    24: { position: 'Unknown?' } // TODO: Figure out what this is
+};
 
 
 module.exports = {
@@ -153,3 +163,17 @@ module.exports = {
         return league.teams;
     }
 }
+
+
+/*
+TODO: 
+    [ ] figure out correct stats for players
+    [ ] figure out which players in the lineup for a given week
+    [ ] figure out a team's projected points
+        [ ] add team to watch by looking a next week's team projections and sharing a text snippet
+    [ ] get player to watch by looking at the next week's player projections and taking the top one
+    [ ] change design to a 2x2 grid
+        [ ] add player picture and position color, maybe with a meter compared to other players at that position
+    [ ] make purple bar a percentage bar based on points scored by position
+
+*/

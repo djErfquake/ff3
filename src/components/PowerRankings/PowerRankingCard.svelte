@@ -1,5 +1,6 @@
 <script>
     import PowerRankingStats from './PowerRankingStats.svelte';
+    import PositionWidget from './Widgets/PowerRankingWidget-PointsByPosition.svelte';
 
     export let team;
     export let rank;
@@ -24,7 +25,7 @@
         </div>
     </div>
 
-    <div class="position-distribution"></div>
+    <PositionWidget  pointsByPosition={team.pointsByPosition} />
 </main>
 
 
@@ -89,13 +90,6 @@
     .team-name-and-stats {
         width: 480px;
         height: 100%;
-    }
-
-    .position-distribution {
-        height: 10%;
-        width: 100%;
-
-        background-color: #341f97;
     }
 
     @media only screen and (max-width: 768px) {
