@@ -14,6 +14,7 @@
 
 <style>
     main {
+        margin-top: 30px;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;

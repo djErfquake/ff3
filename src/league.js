@@ -56,14 +56,21 @@ fetch(url, opts)
 
         // player stats
         t.players = t.roster.entries.map(p => {
-            // let pointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.scoringPeriodId != 0 && s.statSourceId == 0);
-            let pointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.statSourceId == 0);
-            let points = pointStats.map(ps => ps.appliedTotal);
-            let pointsTotal = points && points.length > 0 ? points.reduce((a, b) => a + b) : 0;
-            let pointsAverage = points && points.length > 0 ? pointsTotal / points.length : 0;
-            // let pointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.scoringPeriodId != 0 && s.statSourceId == 0);
-            let projectedPointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.statSourceId == 1);
-            let projectedPoints = projectedPointStats.map(ps => ps.appliedTotal);
+            // let pointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.statSourceId == 0 && s.externalId != YEAR);
+            // let points = pointStats.map(ps => ps.appliedTotal);
+            // let pointsTotal = points && points.length > 0 ? points.reduce((a, b) => a + b) : 0;
+            // let pointsAverage = points && points.length > 0 ? pointsTotal / points.length : 0;
+
+            // let projectedPointStats = p.playerPoolEntry.player.stats.filter(s => s.seasonId == YEAR && s.statSourceId == 1 && s.externalId != YEAR);
+            // let projectedPoints = projectedPointStats.map(ps => ps.appliedTotal);
+
+            let pointStats = p.playerPoolEntry.player.stats.find(s => s.seasonId == YEAR && s.externalId == YEAR && s.statSourceId == 0);
+            let pointsTotal = pointStats.appliedTotal;
+            let pointsAverage = pointStats.appliedAverage;
+
+            let projectedPointStats = p.playerPoolEntry.player.stats.find(s => s.seasonId == YEAR && s.externalId == YEAR && s.statSourceId == 1);
+            let projectedPointsTotal = pointStats.appliedTotal;
+            let projectedPointsAverage = pointStats.appliedAverage;
 
             let position = PositionMap[p.lineupSlotId];
             let positionType = position.position;
@@ -82,10 +89,12 @@ fetch(url, opts)
             return {
                 id: p.playerPoolEntry.id,
                 name: p.playerPoolEntry.player.fullName,
-                points: points,
+                //points: points,
                 pointsTotal: pointsTotal,
                 pointsAverage: pointsAverage,
-                projectedPoints: projectedPoints,
+                //projectedPoints: projectedPoints,
+                projectedPointsTotal: projectedPointsTotal,
+                projectedPointsAverage: projectedPointsAverage,
                 position: position
             }
         });
@@ -177,6 +186,11 @@ TODO:
     [ ] get player to watch by looking at the next week's player projections and taking the top one
     [ ] change design to a 2x2 grid
         [ ] add player picture and position color, maybe with a meter compared to other players at that position
-    [ ] make purple bar a percentage bar based on points scored by position
+    [X] make bottom bar a percentage bar based on points scored by position
 
+
+LINKS
+    [ ] Color Palette: https://flatuicolors.com/palette/ca
+    [ ] Flex Box: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+    [ ] SVG Patterns: https://www.heropatterns.com/  
 */

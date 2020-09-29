@@ -38,7 +38,7 @@
 
 <style>
     main {
-        height: 10%;
+        height: 7%;
         width: 100%;
 
         background-color: #341f97;

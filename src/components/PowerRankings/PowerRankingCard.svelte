@@ -32,13 +32,17 @@
 <style>
     main {
         width: 650px;
-        height: 240px;
-        margin: 35px 0px;
+        height: 370px;
+        margin: 45px 0px;
 
         display: flex;
         flex-flow: column wrap;
 
         background-color: white;
+    }
+
+    .card {
+        box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.5), 0 0px 0 1px rgba(10, 10, 10, 0.02);
     }
 
     .team-picture {
@@ -62,7 +66,7 @@
         left: 85%;
         top: -10%;
         border-radius: 50%;
-        box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+        box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.5), 0 0px 0 1px rgba(10, 10, 10, 0.02);
         
         display:flex;
         justify-content: center;
@@ -76,7 +80,7 @@
     }
 
     .card-content {
-        height: 90%;
+        height: 93%;
         width: 100%;
         display: flex;
         flex-flow: wrap;

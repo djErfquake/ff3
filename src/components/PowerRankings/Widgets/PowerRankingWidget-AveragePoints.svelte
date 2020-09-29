@@ -14,7 +14,8 @@
 <style>
     main {
         /* background-color: #576574; */
-        width: 120px;
+        /* width: 120px; */
+        width: 50%;
         height: 120px;
         display: flex;
         align-items: center;
