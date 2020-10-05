@@ -7,8 +7,7 @@
 
 
 <main>
-    <div class="widget-box">
-        <!-- <div class="player-picture" style={picStyle}></div> -->
+    <div class="widget-box player-profile">
         <img class="player-picture" src="{picUrl}" alt="{player.name}"/>
         <div class="label name">{player.name}</div>
     </div>
@@ -22,13 +21,16 @@
 
 <style>
     main {
-        /* background-color: #576574; */
-        /* width: 120px; */
+        background-color: #c8d6e5;
         width: 100%;
-        height: 120px;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .player-profile {
+        margin-top: -15px;
     }
 
     .player-picture {

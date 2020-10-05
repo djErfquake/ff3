@@ -18,9 +18,9 @@
     </div>
 
     <div class="card-content">
-        <div class="behind-logo"></div>
         <div class="team-name-and-stats">
             <div class="team-name is-size-3">{team.owner}</div>
+            <div class="team-name full-name">{team.name}</div>
             <PowerRankingStats team={team}/>
         </div>
     </div>
@@ -32,7 +32,7 @@
 <style>
     main {
         width: 650px;
-        height: 370px;
+        height: 335px;
         margin: 45px 0px;
 
         display: flex;
@@ -85,15 +85,24 @@
         display: flex;
         flex-flow: wrap;
         flex-direction: row-reverse;
-    }
-
-    .behind-logo {
-        height: 100%;
+        padding: 0;
     }
 
     .team-name-and-stats {
-        width: 480px;
+        /* width: 480px; */
+        width: 100%;
         height: 100%;
+    }
+
+    .team-name {
+        padding-left: 9rem;
+        height: 13%;
+    }
+
+    .full-name {
+        margin-top: -7px;
+        font-size: 1.25rem;
+        height: 5%;
     }
 
     @media only screen and (max-width: 768px) {
@@ -104,22 +113,22 @@
         }
 
         .team-name-and-stats {
-            width: 285px;
+            /* width: 285px; */
         }
 
         .team-name {
-            padding-left: 100px;
+            padding-left: 7.5rem;
+        }
+
+        .full-name {
+            font-size: 0.75rem;
         }
     }
 
     @media only screen and (max-width: 400px) {
 
         .team-name-and-stats {
-            width: 100%;
-        }
-
-        .team-name {
-            padding-left: 100px;
+            /* width: 100%; */
         }
     }
 </style>

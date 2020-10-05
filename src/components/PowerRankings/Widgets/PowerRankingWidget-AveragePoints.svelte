@@ -13,10 +13,8 @@
 
 <style>
     main {
-        /* background-color: #576574; */
-        /* width: 120px; */
         width: 50%;
-        height: 120px;
+        height: 130px;
         display: flex;
         align-items: center;
         justify-content: center;
