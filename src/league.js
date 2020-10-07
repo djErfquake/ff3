@@ -13,6 +13,7 @@ const opts = {
 fetch(url, opts)
 .then(res => res.json())
 .then((results) => {
+    console.log(`Got league data from ESPN. Crunching the numbers...`);
     league = results;
     const NUM_OF_OTHER_TEAMS = league.teams.length - 1;
     const HALF_TEAMS = Math.floor(NUM_OF_OTHER_TEAMS / 2);
@@ -37,8 +38,8 @@ fetch(url, opts)
             const couldHaveBeat = gamesInMatchupPeriod.filter(s => s.away.teamId != t.id && s.away.totalPoints < points).length + 
                                   gamesInMatchupPeriod.filter(s => s.home.teamId != t.id && s.home.totalPoints < points).length;
             let pointsLuckyStatus = LuckyStatus.NONE;
-            if (!won && couldHaveBeat > HALF_TEAMS) { pointsLuckyStatus = LuckyStatus.LOST_BUT_WOULD_HAVE_BEAT_MOST_TEAMS; }
-            else if (won && couldHaveBeat < HALF_TEAMS) { pointsLuckyStatus = LuckyStatus.WON_BUT_WOULD_HAVE_LOST_TO_MOST_TEAMS; }
+            if (!won && couldHaveBeat > HALF_TEAMS) { pointsLuckyStatus = 'LOST_BUT_WOULD_HAVE_BEAT_MOST_TEAMS'; }
+            else if (won && couldHaveBeat < HALF_TEAMS) { pointsLuckyStatus = 'WON_BUT_WOULD_HAVE_LOST_TO_MOST_TEAMS'; }
             let plusMinus = points - opponentPoints;
             t.plusMinus += plusMinus;
 
@@ -69,8 +70,8 @@ fetch(url, opts)
             let pointsAverage = pointStats.appliedAverage;
 
             let projectedPointStats = p.playerPoolEntry.player.stats.find(s => s.seasonId == YEAR && s.externalId == YEAR && s.statSourceId == 1);
-            let projectedPointsTotal = pointStats.appliedTotal;
-            let projectedPointsAverage = pointStats.appliedAverage;
+            let projectedPointsTotal = projectedPointStats.appliedTotal;
+            let projectedPointsAverage = projectedPointStats.appliedAverage;
 
             let position = PositionMap[p.lineupSlotId];
             let positionType = position.position;
@@ -106,13 +107,27 @@ fetch(url, opts)
         t.pointsAverage = t.points / t.record.games.length;
         t.couldHaveBeatCount = t.record.games.reduce((a, b) => a + (b.couldHaveBeatCount || 0), 0);
         t.plusMinusAverage = t.plusMinus / t.record.games.length;
+        t.luckyScore = t.record.games.reduce((a, b) => a + (LuckyStatus[b.pointsLuckyStatus] || 0), 0);
+        t.ESPNProjectionDiff = t.currentProjectedRank - t.playoffSeed;
     });
 
     // sort teams for power rankings
     league.teams = [...league.teams].sort((a, b) => b.couldHaveBeatCount - a.couldHaveBeatCount);
+    
+    //
+    league.sorted = {
+        byActualRankings: [...league.teams].sort((a, b) => a.playoffSeed - b.playoffSeed).map(t => t.owner),
+        byCouldHaveBeat: [...league.teams].sort((a, b) => b.couldHaveBeatCount - a.couldHaveBeatCount).map(t => t.owner),
+        byLuck: [...league.teams].sort((a, b) => b.luckyScore - a.luckyScore).map(t => t.owner),
+        byPlusMinus: [...league.teams].sort((a, b) => b.plusMinus - a.plusMinus).map(t => t.owner),
+        byPointsFor: [...league.teams].sort((a, b) => b.record.overall.pointsFor - a.record.overall.pointsFor).map(t => t.owner),
+        byPointsAgainst: [...league.teams].sort((a, b) => b.record.overall.pointsAgainst - a.record.overall.pointsAgainst).map(t => t.owner),
+        byESPNProjection: [...league.teams].sort((a, b) => a.currentProjectedRank - b.currentProjectedRank).map(t => t.owner),
+        byESPNProjectionDiff: [...league.teams].sort((a, b) => b.ESPNProjectionDiff - a.ESPNProjectionDiff).map(t => t.owner)
+    };
 
 
-    console.log(`Got league data from ESPN`);
+    console.log(`Ready`);
 });
 
 let getTeamById = function(id) {
@@ -122,10 +137,10 @@ let getTeamById = function(id) {
 
 const LuckyStatus = {
     NONE: 0,
-    LOST_BUT_WOULD_HAVE_BEAT_MOST_TEAMS: 1,
-    WON_BUT_WOULD_HAVE_LOST_TO_MOST_TEAMS: 2,
-    BETTER_THAN_ESPN_PROJECTED: 3,
-    WORSE_THAN_ESPN_PROJECTED: 4
+    LOST_BUT_WOULD_HAVE_BEAT_MOST_TEAMS: -3,
+    WON_BUT_WOULD_HAVE_LOST_TO_MOST_TEAMS: 3,
+    BETTER_THAN_ESPN_PROJECTED: 1,
+    WORSE_THAN_ESPN_PROJECTED: -1
 }
 
 const NickNames = {
@@ -171,8 +186,7 @@ const PositionMap = {
 
 module.exports = {
     getLeagueData: function() {
-        // return league;
-        return league.teams;
+        return league;
     }
 }
 
