@@ -193,7 +193,8 @@ module.exports = {
 
 /*
 TODO: 
-    [ ] figure out correct stats for players
+    [X] figure out correct stats for players
+    [ ] figure out players stats per week
     [ ] figure out which players in the lineup for a given week
     [ ] figure out a team's projected points
         [ ] add team to watch by looking a next week's team projections and sharing a text snippet
@@ -206,5 +207,6 @@ TODO:
 LINKS
     [ ] Color Palette: https://flatuicolors.com/palette/ca
     [ ] Flex Box: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
-    [ ] SVG Patterns: https://www.heropatterns.com/  
+    [ ] SVG Patterns: https://www.heropatterns.com/ 
+    [ ] charts: https://www.fusioncharts.com/charts/line-area-charts/simple-area-chart?framework=svelte
 */

@@ -1,7 +1,7 @@
 <script>
-    import StreakWidget from './Widgets/PowerRankingWidget-Streak.svelte';
-    import AveragePointsWidget from './Widgets/PowerRankingWidget-AveragePoints.svelte';
-    import BestPlayerWidget from './Widgets/PowerRankingWidget-BestPlayer.svelte';
+    import StreakWidget from './Widgets/Streak.svelte';
+    import AveragePointsWidget from './Widgets/AveragePoints.svelte';
+    import BestPlayerWidget from './Widgets/BestPlayer.svelte';
 
     export let team;
 </script>

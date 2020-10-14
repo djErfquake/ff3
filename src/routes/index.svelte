@@ -7,14 +7,14 @@
 <script context="module">
 	import PowerRankings from '../components/PowerRankings/PowerRankings.svelte';
 
-	const fetchLeagueData = (async () => {
-		// const API_URI = ''; // dev
-		// // const API_URI = 'https://abff.herokuapp.com/'; // prod
-		// const response = await fetch(API_URI + 'league');
-		const response = await fetch('league');
-		let league = await response.json();
-		return league;
-	})();
+	let promise = fetchLeagueData();
+	async function fetchLeagueData() {
+		const res = await fetch('league');
+		const league = await res.json();
+		if (res.ok) { return league; }
+		else { throw new Error(res.text); }
+	}
+
 </script>
 
 
@@ -25,11 +25,13 @@
 </svelte:head>
 
 <main>
-	{#await fetchLeagueData}
+	{#await promise}
 	<progress class="progress is-large is-link" max="100">60%</progress>
 	{:then league}
-		{@debug league}
-		<PowerRankings teams={league.teams}></PowerRankings>
+		{#if league != null && league.teams != null}
+			{@debug league}
+			<PowerRankings teams={league.teams}></PowerRankings>
+		{/if}
 	{:catch error}
 		{@debug error}
 		<p>...error</p>

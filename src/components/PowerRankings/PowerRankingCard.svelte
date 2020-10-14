@@ -1,18 +1,23 @@
 <script>
     import PowerRankingStats from './PowerRankingStats.svelte';
-    import PositionWidget from './Widgets/PowerRankingWidget-PointsByPosition.svelte';
+    import PositionWidget from './Widgets/PointsByPosition.svelte';
 
     export let team;
     export let rank;
 
+    let circleTeamLogo = 'circle';
+    if (team && team.logo.includes('g.espncdn.com')) { circleTeamLogo = ''; }
+
     //https://flatuicolors.com/palette/ca
     //https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     //https://bulma.io/documentation/components/card/
+
+    // https://www.fusioncharts.com/charts/line-area-charts/simple-area-chart?framework=svelte
 </script>
 
 
 <main class="card">
-    <div class="team-picture" style="background-image: url({team.logo});"></div>
+    <div class="team-picture {circleTeamLogo}" style="background-image: url({team.logo});"></div>
     <div class="rank">
         <div class="rank-number is-size-2 has-text-weight-semibold is-family-sans-serif">{rank + 1}</div>
     </div>
@@ -51,7 +56,9 @@
         position: absolute;
         left: -10%;
         top: -20%;
+    }
 
+    .circle {
         /* box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02); */
         background-size: cover;
         background-repeat: no-repeat;
