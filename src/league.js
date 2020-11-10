@@ -25,6 +25,8 @@ fetch(url, opts)
         t.owner = nameToNickname(league.members.filter(m => m.id == t.owners[0])[0].firstName);
         t.plusMinus = 0;
         t.pointsByPosition = {};
+        t.wins = 0; t.winAmount = 0;
+        t.losses = 0; t.lossAmount = 0;
         
         // schedule
         let schedule = leagueSchedule.filter(s => s.away.teamId == t.id || s.home.teamId == t.id);
@@ -36,12 +38,14 @@ fetch(url, opts)
             const won = points > opponentPoints;
             const gamesInMatchupPeriod = leagueSchedule.filter(s => s.matchupPeriodId == g.matchupPeriodId);
             const couldHaveBeat = gamesInMatchupPeriod.filter(s => s.away.teamId != t.id && s.away.totalPoints < points).length + 
-                                  gamesInMatchupPeriod.filter(s => s.home.teamId != t.id && s.home.totalPoints < points).length;
+            gamesInMatchupPeriod.filter(s => s.home.teamId != t.id && s.home.totalPoints < points).length;
             let pointsLuckyStatus = LuckyStatus.NONE;
             if (!won && couldHaveBeat > HALF_TEAMS) { pointsLuckyStatus = 'LOST_BUT_WOULD_HAVE_BEAT_MOST_TEAMS'; }
             else if (won && couldHaveBeat < HALF_TEAMS) { pointsLuckyStatus = 'WON_BUT_WOULD_HAVE_LOST_TO_MOST_TEAMS'; }
             let plusMinus = points - opponentPoints;
             t.plusMinus += plusMinus;
+            t.wins += won ? 1 : 0; t.losses += won ? 0 : 1;
+            t.winAmount += won ? plusMinus : 0; t.lossAmount += won ? 0 : plusMinus;
 
             return {
                 points: points,
@@ -109,6 +113,7 @@ fetch(url, opts)
         t.plusMinusAverage = t.plusMinus / t.record.games.length;
         t.luckyScore = t.record.games.reduce((a, b) => a + (LuckyStatus[b.pointsLuckyStatus] || 0), 0);
         t.ESPNProjectionDiff = t.currentProjectedRank - t.playoffSeed;
+        t.averageWinAmount = t.winAmount / t.wins; t.averageLossAmount = t.lossAmount / t.losses;
     });
 
     // sort teams for power rankings
@@ -120,6 +125,8 @@ fetch(url, opts)
         byCouldHaveBeat: [...league.teams].sort((a, b) => b.couldHaveBeatCount - a.couldHaveBeatCount).map(t => t.owner),
         byLuck: [...league.teams].sort((a, b) => b.luckyScore - a.luckyScore).map(t => t.owner),
         byPlusMinus: [...league.teams].sort((a, b) => b.plusMinus - a.plusMinus).map(t => t.owner),
+        byAverageWinAmount: [...league.teams].sort((a, b) => b.averageWinAmount - a.averageWinAmount).map(t => t.owner),
+        byAverageLossAmount: [...league.teams].sort((a, b) => b.averageLossAmount - a.averageLossAmount).map(t => t.owner),
         byPointsFor: [...league.teams].sort((a, b) => b.record.overall.pointsFor - a.record.overall.pointsFor).map(t => t.owner),
         byPointsAgainst: [...league.teams].sort((a, b) => b.record.overall.pointsAgainst - a.record.overall.pointsAgainst).map(t => t.owner),
         byESPNProjection: [...league.teams].sort((a, b) => a.currentProjectedRank - b.currentProjectedRank).map(t => t.owner),
@@ -202,6 +209,13 @@ TODO:
     [ ] change design to a 2x2 grid
         [ ] add player picture and position color, maybe with a meter compared to other players at that position
     [X] make bottom bar a percentage bar based on points scored by position
+    [ ] new stats
+        [X] average loss amount
+        [X] average win amount
+    [ ] new pages
+        [ ] matchup page
+        [ ] team page
+            [ ] with all stats
 
 
 LINKS

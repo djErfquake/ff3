@@ -1,9 +1,15 @@
 <script>
     import PowerRankingStats from './PowerRankingStats.svelte';
     import PositionWidget from './Widgets/PointsByPosition.svelte';
+    import slide from 'svelte-transitions-slide';
 
     export let team;
     export let rank;
+
+    function teamClicked(teamId) {
+        console.log('clicked! teamId: ' + teamId);
+        window.location.href = `/team/${teamId}`;
+    };
 
     let circleTeamLogo = 'circle';
     if (team && team.logo.includes('g.espncdn.com')) { circleTeamLogo = ''; }
@@ -17,7 +23,7 @@
 
 
 <main class="card">
-    <div class="team-picture {circleTeamLogo}" style="background-image: url({team.logo});"></div>
+    <div class="team-picture {circleTeamLogo}" style="background-image: url({team.logo});"  on:click={() => teamClicked(team.id)}></div>
     <div class="rank">
         <div class="rank-number is-size-2 has-text-weight-semibold is-family-sans-serif">{rank + 1}</div>
     </div>
