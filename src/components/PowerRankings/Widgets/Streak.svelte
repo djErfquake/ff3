@@ -18,11 +18,12 @@
 
 <style>
     main {
-        width: 50%;
+        width: 60px;
         height: 130px;
         display: flex;
         align-items: center;
         justify-content: center;
+        margin: 0 10px;
     }
 
     .win {

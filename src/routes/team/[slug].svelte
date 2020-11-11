@@ -22,7 +22,7 @@
 </script>
 
 <script>
-	import TeamCard from '../../components/PowerRankings/PowerRankingCard.svelte';
+	import TeamCard from '../../components/Teams/Team.svelte';
 </script>
 
 
@@ -37,7 +37,7 @@
 	{:then league}
 		{#if league != null && id != null}
 			{@debug league}
-			<TeamCard team={getTeam(league, parseInt(id))} rank=1 />
+			<TeamCard league={league} team={getTeam(league, parseInt(id))} />
 		{/if}
 	{:catch error}
 		{@debug error}
