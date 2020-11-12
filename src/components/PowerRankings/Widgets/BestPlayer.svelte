@@ -21,7 +21,6 @@
 
 <style>
     main {
-        background-color: #c8d6e5;
         width: 100%;
         height: 100%;
         display: flex;

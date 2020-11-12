@@ -11,26 +11,38 @@
     const plusMinusRanking = league.sorted.byPlusMinus.indexOf(team.owner) + 1;
     // const avgWinAmtRanking = league.sorted.byAverageWinAmount.indexOf(team.owner) + 1;
     // const avgLossAmtRanking = league.sorted.byAverageLossAmount.indexOf(team.owner) + 1;
+
+
+    const basicWidgets = [
+        { label: "AVERAGE POINTS", number: Math.round(team.pointsAverage), tooltip: "Your team's average amount of points scored per game" },
+        { label: "ACTUAL RANK", number: team.playoffSeed, tooltip: "Your team's ranking on ESPN. The top 8 teams make it into the playoffs, 4 from each conference." },
+        { label: "ESPN PROJECTED RANK", number: team.currentProjectedRank, tooltip: "The ranking that ESPN thinks you should be at, based on the value of your players." },
+        { label: "CALVIN'S POWER RANK", number: powerRanking, tooltip: "The rank Calvin thinks you should be at, based on how many teams you could have beaten each week." },
+        { label: "AVERAGE +/-", number: Math.round(team.plusMinusAverage), tooltip: "The average number of points you score different than your opponents. A positive +/- means that you usually score more than your oppenent and a negative +/- means you usually score less." },
+        { label: "+/- RANK", number: plusMinusRanking, tooltip: "Your team's ranking of your average +/- compared to the rest of the league." },
+        { label: "AVERAGE WIN AMOUNT", number: team.averageWinAmount ? Math.round(team.averageWinAmount) : "-", tooltip: "The average amount of points you win by." },
+        { label: "AVERAGE LOSS AMOUNT", number: team.averageLossAmount ? Math.round(team.averageLossAmount) : "-", tooltip: "The average amount of points you lose by."  }
+        // { label: , number: , tooltip: },
+    ]
+
 </script>
 
 
 <main>
-    <div class="row top-row">
+    <div class="row team-stats">
         <StreakWidget streakLength={team.record.overall.streakLength} streakType={team.record.overall.streakType} />
-        <BasicWidget number={Math.round(team.pointsAverage)} label="AVERAGE POINTS" />
 
-        <BasicWidget number={team.playoffSeed} label="ACTUAL RANK" />
-        <BasicWidget number={team.currentProjectedRank} label="ESPN PROJECTED RANK" />
-        <BasicWidget number={powerRanking} label="CALVIN'S POWER RANK" />
-
-        <BasicWidget number={team.plusMinusAverage.toFixed(2)} label="AVERAGE +/-" />
-        <BasicWidget number={plusMinusRanking} label="+/- RANK" />
-
-        <BasicWidget number={Math.round(team.averageWinAmount)} label="AVERAGE WIN AMOUNT" />
-        <BasicWidget number={Math.round(team.averageLossAmount)} label="AVERAGE LOSS AMOUNT" />
+        {#each basicWidgets as widget}
+            <BasicWidget label={widget.label} number={widget.number} tooltip={widget.tooltip} />
+        {/each}
     </div>
-    <div class="row">
+    <div class="row player-stats">
         <BestPlayerWidget player={team.bestPlayer} />
+        <div class="player-outlook">
+            {#if team.bestPlayer.weekOutlook != null}
+                {team.bestPlayer.weekOutlook}
+            {/if}
+        </div>
     </div>
 </main>
 
@@ -38,22 +50,27 @@
 <style>
     main {
         width: 100%;
-        height: 85%;
         display: flex;
         flex-direction: column;
     }
 
     .row {
-        width: 100%;
-        height: 100%;
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
-        
     }
 
-    .top-row {
+    .team-stats {
         margin: 10px 10px;
         margin-top: 50px;
+    }
+
+    .player-stats {
+        background-color: #c8d6e5;
+    }
+
+    .player-outlook {
+        font-size: 0.9em;
+        margin: 10px;
     }
 </style>

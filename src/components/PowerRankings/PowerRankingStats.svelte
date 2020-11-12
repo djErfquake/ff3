@@ -1,19 +1,15 @@
 <script>
     import StreakWidget from './Widgets/Streak.svelte';
-    import AveragePointsWidget from './Widgets/AveragePoints.svelte';
-    import BestPlayerWidget from './Widgets/BestPlayer.svelte';
+    import BasicWidget from './Widgets/BasicWidget.svelte';
 
     export let team;
 </script>
 
 
 <main>
-    <div class="row">
+    <div class="row team-stats">
         <StreakWidget streakLength={team.record.overall.streakLength} streakType={team.record.overall.streakType} />
-        <AveragePointsWidget averagePoints={team.pointsAverage} />
-    </div>
-    <div class="row">
-        <BestPlayerWidget player={team.bestPlayer} />
+        <BasicWidget label="AVERAGE POINTS" number={Math.round(team.pointsAverage)} tooltip="Your team's average amount of points scored per game" />
     </div>
 </main>
 
@@ -21,20 +17,18 @@
 <style>
     main {
         width: 100%;
-        height: 85%;
         display: flex;
         flex-direction: column;
     }
 
     .row {
-        width: 100%;
-        height: 100%;
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
     }
 
-    .behind-logo {
-        width: 20px;
+    .team-stats {
+        margin: 10px 10px;
+        margin-top: 50px;
     }
 </style>

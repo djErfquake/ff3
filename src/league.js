@@ -79,6 +79,16 @@ fetch(url, opts)
 
             let position = PositionMap[p.lineupSlotId];
             let positionType = position.position;
+
+            let weekOutlook = null;
+            
+            if (p.playerPoolEntry.player.outlooks) {
+                const outlooks = p.playerPoolEntry.player.outlooks.outlooksByWeek;
+                if (outlooks[league.scoringPeriodId]) {
+                    weekOutlook = outlooks[league.scoringPeriodId];
+                }
+            }
+
             if (p.lineupSlotId != 20)
             {
                 if (t.pointsByPosition[positionType]) {
@@ -100,7 +110,8 @@ fetch(url, opts)
                 //projectedPoints: projectedPoints,
                 projectedPointsTotal: projectedPointsTotal,
                 projectedPointsAverage: projectedPointsAverage,
-                position: position
+                position: position,
+                weekOutlook: weekOutlook
             }
         });
         t.bestPlayer = [...t.players].sort((a, b) => b.pointsTotal - a.pointsTotal)[0]

@@ -1,11 +1,18 @@
 <script>
+    import tippy from "sveltejs-tippy";
+
     export let number;
     export let label;
+    export let tooltip;
+
+    const tippyProps = {
+        content: tooltip
+    };
 </script>
 
 
 <main>
-    <div class="widget-box">
+    <div class="widget-box" use:tippy={tippyProps}>
         <div class="points">{number}</div>
         <div class="label">{label}</div>
     </div>
@@ -14,7 +21,7 @@
 
 <style>
     main {
-        width: 60px;
+        width: 55px;
         height: 130px;
         display: flex;
         align-items: center;
@@ -29,20 +36,13 @@
     }
 
     .points {
-        font-size: 3.25em;
+        font-size: 2.4em;
     }
 
     .label {
-        font-weight: 600;
+        font-size: 14px;
+        font-weight: 500;
         line-height: 15px;
-    }
-
-    .win {
-        color: #1dd1a1;
-    }
-
-    .loss {
-        color: #ff6b6b;
     }
 
 </style>
