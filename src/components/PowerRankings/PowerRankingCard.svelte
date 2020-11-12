@@ -29,22 +29,26 @@
     </div>
 
     <div class="card-content">
-        <div class="team-name-and-stats">
-            <div class="team-name is-size-3">{team.owner}</div>
-            <div class="team-name full-name">{team.name}</div>
-            <PowerRankingStats team={team}/>
+        <div class="stats">
+            <div class="team-name-and-stats">
+                <div class="team-name is-size-3">{team.owner}</div>
+                <div class="team-name full-name">{team.name}</div>
+                <PowerRankingStats team={team}/>
+            </div>
         </div>
-    </div>
+    
+        <PositionWidget  pointsByPosition={team.pointsByPosition} />
 
-    <PositionWidget  pointsByPosition={team.pointsByPosition} />
+    </div>
 </main>
 
 
 <style>
     main {
-        width: 650px;
-        height: 335px;
-        margin: 45px 0px;
+        width: 700px;
+        /* height: 335px; */
+        margin: 15px 0px;
+        margin-bottom: 50px;
 
         display: flex;
         flex-flow: column wrap;
@@ -76,7 +80,7 @@
         width: 70px;
         height: 70px;
         position: absolute;
-        left: 85%;
+        left: 82%;
         top: -10%;
         border-radius: 50%;
         box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.5), 0 0px 0 1px rgba(10, 10, 10, 0.02);
@@ -93,7 +97,14 @@
     }
 
     .card-content {
-        height: 93%;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
+    }
+
+    .stats {
+        height: 215px;
         width: 100%;
         display: flex;
         flex-flow: wrap;
@@ -113,7 +124,7 @@
     }
 
     .full-name {
-        margin-top: -7px;
+        margin-top: 15px;
         font-size: 1.25rem;
         height: 5%;
     }
@@ -125,23 +136,12 @@
             height: 150px;
         }
 
-        .team-name-and-stats {
-            /* width: 285px; */
-        }
-
         .team-name {
-            padding-left: 7.5rem;
+            padding-left: 8rem;
         }
 
         .full-name {
             font-size: 0.75rem;
-        }
-    }
-
-    @media only screen and (max-width: 400px) {
-
-        .team-name-and-stats {
-            /* width: 100%; */
         }
     }
 </style>

@@ -23,12 +23,12 @@
 
     .row {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         flex-wrap: wrap;
     }
 
     .team-stats {
         margin: 10px 10px;
-        margin-top: 50px;
+        margin-top: 20px;
     }
 </style>
