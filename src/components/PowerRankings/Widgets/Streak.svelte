@@ -11,6 +11,7 @@
                 <span class="win">▲{streakLength}</span>
             {:else if streakType == "LOSS"}
                 <span class="loss">▼{streakLength}</span>
+            {:else}—
             {/if}
             <div class="label">CURRENT STREAK</div>
         </div>
