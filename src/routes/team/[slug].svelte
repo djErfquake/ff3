@@ -46,5 +46,15 @@
 </main>
 
 <style>
+	:global(html) {
+		height: 100%;
+	}
 
+	:global(body) {
+		height: 100%;
+	}
+
+	:global(#sapper-container) {
+        height: 100%;
+    }
 </style>

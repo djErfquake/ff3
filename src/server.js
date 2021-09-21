@@ -13,7 +13,7 @@ console.log("dev env?", dev);
 // load league info
 import league from './league.js';
 console.log(`Getting league info for league: ${LEAGUE_ID}`);
-league.init(LEAGUE_ID, 2020, ESPN_COOKIE);
+league.init(LEAGUE_ID, 2021, ESPN_COOKIE);
 
 
 // server and api endpoints
